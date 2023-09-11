@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>익명게시판 - 상세보기</title>
+<link rel="stylesheet" href="/css/bootstrap.min.css"/>
+
+<style>
+	.table td, .table th {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #000203;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+	<br><br>
+	<div class="row justify-content-center align-items-center">
+		<div class="col-lg-8 text-center">
+    <center>
+		<h3>상세보기</h3>
+	</center><br>
+			<table align="center" class="table table-striped-columns" border="1">
+				<tr>
+					<th>제목</th>
+					<td colspan="5" align="center" th:text="${board.title}"></td>
+				</tr>
+				<tr>
+					<th width="85">작성일</th>
+					<td width="200" th:text="${board.writedt}"></td>
+					<th width="85">작성자</th>
+					<td th:text="${board.writer}"></td>
+					<th width="85">조회수</th>
+					<td th:text="${board.readcount}"></td>
+				</tr>
+				<tr>
+					<th style="vertical-align: middle;">내용</th>
+					<td colspan="5" height="300px" style="vertical-align: middle;" th:text="${board.content}"></td>
+				</tr>
+			</table>
+	<br>
+	<div class="row">
+		<div class="col">
+            <button class="btn btn-primary m-2"
+                    th:onclick="|location.href='@{/reply/{bno}(bno=${board.bno})}'|">답글 작성</button>
+        </div>
+		
+        <div class="col">
+            <button class="btn btn-primary m-2"
+                    th:onclick="|location.href='@{/update/{bno}(bno=${board.bno})}'|">글 수정</button>
+        </div>
+        
+        <div class="col">
+            <button class="btn btn-primary m-2"
+                    th:onclick="|location.href='@{/delete/{bno}(bno=${board.bno})}'|">글 삭제</button>
+        </div>
+        
+        <div class="col">
+            <button class="btn btn-primary m-2"
+                    th:onclick="|location.href='@{/list}'|">돌아가기</button>
+        </div>
+
+    </div>
+          </div>
+        </div>
+      </div>
+</body>
+</html>

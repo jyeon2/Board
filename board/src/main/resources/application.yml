@@ -1,0 +1,13 @@
+
+# server
+server:
+  port: 8081
+
+# Application Spring properties
+spring:
+  datasource:
+    hikari:
+      jdbc-url: jdbc:postgresql://dev-ts.icanman.co.kr:15432/postgres
+      username: appuser
+      password: Qwert12345
+      driver-class-name: org.postgresql.Driver

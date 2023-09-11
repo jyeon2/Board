@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.board.mapper.BoardMapper">
+	
+	<select id="selectBoardList" resultType="com.example.board.dto.BoardDto">
+	    select *, to_char(write_date, 'yyyy-mm-dd') as writedt
+		from board
+		where 1=1
+		and is_deleted=false
+		and re_level =0
+        order by bno desc
+        offset (#{page} - 1) * #{pageSize}
+        limit #{pageSize}
+	</select>
+	
+	<select id="selectBoardReplyList" resultType="com.example.board.dto.BoardDto">
+	    select *, to_char(write_date, 'yyyy-mm-dd') as writedt, re_level as relevel
+		from board
+		where 1=1
+		and is_deleted=false
+		and re_level =1
+		and ref=#{ref}
+        order by bno desc
+	</select>	 
+	
+	<select id="selectSearchList" resultType="com.example.board.dto.BoardDto">
+	    select *, to_char(write_date, 'yyyy-mm-dd') as writedt
+		from board
+		where 1=1
+		<choose>
+	    	<when test="type !=null and type.equals('title')">
+			and title like CONCAT('%', #{keyword}, '%')
+			</when>
+			<when test="type !=null and type.equals('content')">
+			and content like CONCAT('%', #{keyword}, '%')
+			</when>
+			<when test="type !=null and type.equals('writer')">
+			and writer like CONCAT('%', #{keyword}, '%')
+	        </when>
+		</choose>
+		order by bno desc
+	</select>
+	
+	<insert id="insertBoard">
+		insert into board(title, writer, content, pw, write_date, ref, re_step, re_level)
+		values(#{title},#{writer},#{content},#{pw},default,currval('board_seq'),#{re_step},#{re_level})
+	</insert>
+	
+	<update id="readCount">
+		update board set readcount = readcount+1
+		where bno=#{bno}
+	</update>
+	
+	<select id="selectBoardOne" resultType="com.example.board.dto.BoardDto">
+		select *, to_char(write_date, 'yyyy-mm-dd') as writedt
+		from board
+		where bno=#{bno}
+	</select>
+	
+	<update id="updateBoard">
+		update board
+		set title=#{title}, writer=#{writer}, content=#{content}, pw=#{pw}
+		where bno=#{bno}
+	</update>
+	
+	<update id="deleteBoard">
+		update board
+		set is_deleted=true
+		where 1=1
+		and bno=#{bno}
+	</update>
+	
+	<update id="replyUpdate">
+		update board set re_step = re_step+1
+		where ref=#{ref} and re_step > #{re_step}
+	</update>
+	
+	<insert id="replyInsert">
+		insert into board(title, writer, content, pw, write_date, ref, re_step, re_level)
+		values(#{title},#{writer},#{content},#{pw},default,#{ref},#{re_step}+1,#{re_level}+1)
+	</insert>
+	
+	<select id="getTotalCnt">
+		select count(*) from board
+		where 1=1
+		<choose>
+	    	<when test="type !=null and type.equals('title')">
+			and title like CONCAT('%', #{keyword}, '%')
+			</when>
+			<when test="type !=null and type.equals('content')">
+			and content like CONCAT('%', #{keyword}, '%')
+			</when>
+			<when test="type !=null and type.equals('writer')">
+			and writer like CONCAT('%', #{keyword}, '%')
+	        </when>
+		</choose>
+	</select>
+	
+</mapper>

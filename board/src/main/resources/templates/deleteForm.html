@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>익명게시판 - 글 삭제</title>
+<link rel="stylesheet" href="/css/bootstrap.min.css"/>
+
+<style>
+	.table td, .table th {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #000408;
+}
+</style>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+	function pwCheck(pw){
+         
+            //var original_pw = $("#pw").val();
+            var inputPw = $("#pw").val();
+            
+            var deleteData = JSON.stringify({
+                pw: inputPw
+            })
+            var bno_val = $("#bno").val();
+            console.log(deleteData)
+            const reqUrl = "/delete/"+bno_val;
+            //if (original_pw == inputPw) { // 비밀번호 일치여부 체크
+                $.ajax({
+                    type: "post", // method가 post인 메서드로 보낸다는 뜻
+                    url: reqUrl, // /delete/{bno}
+                    contentType: "application/json", // json을 보낸다면 반드시 작성
+                    data: deleteData, // 위에서 설정한 deleteData를 보냄 (json타입)
+                    success: function (result) {
+                       // deleteForm.submit();
+                       // .... json data  parsing...
+                      
+                       console.log(result);
+                       alert(result.MSG);
+                       
+                       if(result.MSG == "성공적으로 삭제가 완료되었습니다."){
+						   location.href='/list';
+					   }
+             
+                    },
+                    error: function () {
+                        alert("ajax 실패")
+                    }
+                })
+           // } else {
+           //     alert("비밀번호가 일치하지 않습니다.")
+           // }
+        }
+        
+</script>
+	
+</head>
+<body>
+<div class="container">
+<br><br>
+<div class="row justify-content-center align-items-center">
+          <div class="col-lg-7 text-center">
+           <div class="col-lg-6">
+          </div>
+            <h3>글 삭제</h3>
+            <br><br>       
+		<form action="#" method="post" name="deleteForm">
+		<input type="hidden" id="bno" th:value="${board.bno }">
+		<table align="center" class="table" border="1">
+		<tr>
+			<th>비밀번호를 입력해 주세요.</th>
+		</tr>
+		<tr>
+			<td>비밀번호 :&nbsp;&nbsp;<input type="password" id="pw" th:field="*{board.pw}"></td>	
+		</tr>
+		<tr>
+		<td align="center">
+			<button class="btn btn-primary m-2" type="button" th:onclick="pwCheck(pw)">글 삭제</button>&nbsp; &nbsp;
+			<button class="btn btn-primary m-2" type="button" th:onclick="|location.href='@{/detail/{bno}(bno=${board.bno})}'|">돌아가기</button>
+		</td>
+	</tr>
+	</table>
+	</form>
+          </div>
+        </div>
+      </div>
+</body>
+</html>
